@@ -1,0 +1,82 @@
+.content {
+	margin: auto;
+  width: 640px; 
+  padding: 40px;
+  font-family: 'Lexend Deca', sans-serif; 
+  color: #2E475D;  
+}
+
+.vertical-menu {
+  height: 93%;
+  width: 100px;
+  background-color: #555;
+}
+
+.row{
+	padding: 5px;
+}
+
+.col {
+	position: relative;
+	height: 100px;
+	margin: 10px;
+	width: 100%;
+	right: 13.5%;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 12px 12px;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  width: 70%;
+  text-align: center;
+
+}
+
+.button5 {
+  background-color: white;
+  color: black;
+  border: 2px solid #555555;
+}
+
+.button5:hover {
+  background-color: #555555;
+  color: white;
+}
+
+.child {
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+}
+
+.col > button {
+	position: relative;
+	left: 10%;
+}
+
+#pins {
+  border: 2px solid black;
+  width: 20%;
+  border-radius: 2px;
+  background-color: white;
+}
+#pins > input {
+  width: 50%;
+}
+
+#pins > #pin_btn {
+  position: relative;
+  width: 10%;
+  left: -10%;
+}
+
+#pin_error {
+  color: rgb(255, 0, 0);
+}

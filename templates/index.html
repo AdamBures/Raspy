@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type='text/css' href="{% static 'css/style-nav.css' %}">
+		<link rel="stylesheet" type='text/css' href="{% static 'css/style-slide.css'%}">
+		<link rel="stylesheet" type='text/css' href="{% static 'css/style.css'%}">
+		<script src="{% static 'javascript/slideshow.js' %}"></script>
+
+		<title>Main Page</title>
+	</head>
+	<body>
+	    <section class="top-nav">
+		    <div class="logo">
+		      <img src="{% static 'images/logo.png' %}">
+		    </div>
+		    <input id="menu-toggle" type="checkbox" />
+		    <label class='menu-button-container' for="menu-toggle">
+		    <div class='menu-button'></div>
+		  </label>
+		    <ul class="menu">
+		      <a class="item" href="/">Domů</a>
+		      <a class="item" href="/create">Tvoř</a>
+		    </ul>
+		  </section>
+		  	<div class="content">
+				<h1>FAQ</h1>
+				<h2>Co je RASPY ?</h2>
+				<p>RASPY je webový simulátor Raspberry Pi. Uživatel si zde může vyzkoušet Raspberry Pi komponenty a nemusí se bát, že by si poškodil své Raspberry Pi</p>
+				<br>
+				<h2>Proč byl RASPY vytvořen ?</h2>
+				<p>RASPY je projekt, který byl vytvořený formou seminární práce Adamem Burešem pro školní rok 2022/2023.</p>
+				<br>
+				<h2>Co bude výstupem RASPY ?</h2>
+				<p>Výstupem RASPY bude grafické rozhraní elektrických komponent a zdrojový kód vygenerován k použití na skutečném Raspberry Pi.</p>
+				<h1>Galerie</h1>
+			</div>
+	    <div class="slideshow-container">
+
+			<div class="mySlides fade" style="display: block;">
+			  <div class="numbertext">1 / 3</div>
+			  <img src="{% static 'images/raspi.jpg' %}">
+			  <div class="text">Raspberry Pi</div>
+			</div>
+
+			<div class="mySlides fade">
+			  <div class="numbertext">2 / 3</div>
+			  <img src="{% static 'images/description.png' %}">
+			  <div class="text">Raspberry Pi - Description</div>
+			</div>
+
+			<div class="mySlides fade">
+			  <div class="numbertext">3 / 3</div>
+			  <img src="{% static 'images/pins.png' %}">
+			  <div class="text">Raspberry Pi - Pins</div>
+			</div>
+
+			<a class="prev" onclick="plusSlides(-1)">❮</a>
+			<a class="next" onclick="plusSlides(1)">❯</a>
+
+			</div>
+			<br>
+
+			<div style="text-align:center">
+			  <span class="dot active" onclick="currentSlide(1)"></span> 
+			  <span class="dot" onclick="currentSlide(2)"></span> 
+			  <span class="dot" onclick="currentSlide(3)"></span> 
+			</div>
+		</div>
+	 </body>
+</html>

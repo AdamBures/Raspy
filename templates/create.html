@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type='text/css' href="{% static 'css/style-nav.css' %}">
+		<link rel="stylesheet" type='text/css' href="{% static 'css/style-slide.css'%}">
+		<link rel="stylesheet" type='text/css' href="{% static 'css/style.css'%}">
+		<script src="{% static 'javascript/main.js' %}"></script>
+
+		<title>Main Page</title>
+	</head>
+	<body>
+	    <section class="top-nav">
+		    <div class="logo">
+		      <img src="{% static 'images/logo.png' %}">
+		    </div>
+		    <input id="menu-toggle" type="checkbox" />
+		    <label class='menu-button-container' for="menu-toggle">
+		    <div class='menu-button'></div>
+		  </label>
+		    <ul class="menu">
+		      <a class="item" href="/">Domů</a>
+		      <a class="item" href="/create">Tvoř</a>
+		    </ul>
+		</section>
+		<div class="vertical-menu">
+			  <div class="container">
+			    <div class="row">
+				        <div class="col">
+				            <div id="ledPic" ><img id="myImage" src="{% static 'images/led.jpg' %}" alt="led"/></div>
+				        </div>
+				        <div class="col">
+				            <div id="btnPic" ><img id="myImage" src="{% static 'images/button.png' %}" alt="btn"/></div>
+				        </div>
+				        <div class="col">
+				        	<div id="lcdPic">
+				            <img src="{% static 'images/lcd.png' %}" alt="lcd">
+				        	</div>
+				        </div>
+						<div class="col">
+							<button id="btn" class="button button5">Save PY</button>
+				        </div>
+				        <div class="col">
+							<button id="btn" class="button button5">Save RPY</button>
+				        </div>
+				        <div class="col">
+							<button id="btn" class="button button5">Open</button>
+				        </div>
+				    </div>
+				</div>
+		</div>
+		<div id="pins" class="pins" style="display: none;">
+			<center>
+				<label for="pin">Pin number:</label>
+				<input type="text" id="pin" name="pin" size="6"><br><br>
+				<p id="pin_error"></p>
+				<button id="pin_btn" class="button button5">Submit</button>
+			</center>
+		</div>
+		<div id="lstDiv"></div>
+	</body>
+</html>
