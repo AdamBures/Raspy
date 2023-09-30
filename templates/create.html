@@ -9,7 +9,7 @@
 		<link rel="stylesheet" type='text/css' href="{% static 'css/style.css'%}">
 		<script src="{% static 'javascript/main.js' %}"></script>
 
-		<title>Main Page</title>
+		<title>Create Page</title>
 	</head>
 	<body>
 	    <section class="top-nav">
@@ -23,30 +23,47 @@
 		    <ul class="menu">
 		      <a class="item" href="/">Domů</a>
 		      <a class="item" href="/create">Tvoř</a>
+		      <a class="item" href="/login">Účet</a>
+		      
 		    </ul>
 		</section>
 		<div class="vertical-menu">
 			  <div class="container">
 			    <div class="row">
-				        <div class="col">
-				            <div id="ledPic" ><img id="myImage" src="{% static 'images/led.jpg' %}" alt="led"/></div>
-				        </div>
-				        <div class="col">
-				            <div id="btnPic" ><img id="myImage" src="{% static 'images/button.png' %}" alt="btn"/></div>
-				        </div>
-				        <div class="col">
-				        	<div id="lcdPic">
-				            <img src="{% static 'images/lcd.png' %}" alt="lcd">
+			    		{% for component in components|slice:":3" %}
+							<div class="col">
+				            	<div id="{{ component.name }}Pic" > <img id="myImage-{{ component.name }}" src="{{ component.icon }}" alt="{{ component.name }}"></div>
 				        	</div>
-				        </div>
+			    		{% endfor %}
+			    		<div class="col">
+			    			<nav role="navigation">
+								  <div id="menuToggle">
+								    <input type="checkbox" id="menu_check"/>
+								    
+								    <span></span>
+								    <span></span>
+								    <span></span>
+
+								    <ul id="menu" style="display: none;">
+								    	{% for component in components %}
+
+								            	<li id="{{ component.name }}Pic" > 
+								            			<img id="myImage-{{ component.name }}" src="{{ component.icon }}" alt="{{ component.name }}">
+								            	</li>
+							    		{% endfor %}
+								    </ul>
+								  </div>
+								</nav>
+			    		</div>
 						<div class="col">
 							<button id="btn" class="button button5">Save PY</button>
 				        </div>
 				        <div class="col">
-							<button id="btn" class="button button5">Save RPY</button>
+							<button id="btn_save_rpy" class="button button5">Save RPY</button>
 				        </div>
 				        <div class="col">
-							<button id="btn" class="button button5">Open</button>
+				        	<input type="file" id="fileInput" accept=".rpy,application/x-rpy" style="display: none;">
+							<button id="btn_open" class="button button5">Open</button>
 				        </div>
 				    </div>
 				</div>
@@ -57,6 +74,42 @@
 				<input type="text" id="pin" name="pin" size="6"><br><br>
 				<p id="pin_error"></p>
 				<button id="pin_btn" class="button button5">Submit</button>
+			</center>
+		</div>
+		<div id="lcd_pins" class="pins" style="display: none;">
+			<center>
+				<label for="lcd_rs">Lcd_rs number:</label>
+				<input type="text" id="lcd_rs" name="lcd_rs" size="6"><br><br>
+
+				<label for="lcd_en">Lcd_en number:</label>
+				<input type="text" id="lcd_en" name="lcd_en" size="6"><br><br>
+
+				<label for="lcd_d4">Lcd_d4 number:</label>
+				<input type="text" id="lcd_d4" name="lcd_d4" size="6"><br><br>
+
+				<label for="lcd_d5">Lcd_d5 number:</label>
+				<input type="text" id="lcd_d5" name="lcd_d5" size="6"><br><br>
+
+				<label for="lcd_d6">Lcd_d6 number:</label>
+				<input type="text" id="lcd_d6" name="lcd_d6" size="6"><br><br>
+
+				<label for="lcd_d7">Lcd_d7 number:</label>
+				<input type="text" id="lcd_d7" name="lcd_d7" size="6"><br><br>
+
+				<label for="lcd_backlight">Lcd_backlight number:</label>
+				<input type="text" id="lcd_backlight" name="lcd_backlight" size="6"><br><br>
+
+				<label for="lcd_columns">Lcd_columns number:</label>
+				<input type="text" id="lcd_columns" name="lcd_columns" size="6"><br><br>
+
+				<label for="lcd_rows">Lcd_rows number:</label>
+				<input type="text" id="lcd_rows" name="lcd_rows" size="6"><br><br>
+
+				<label for="lcd_message">Message:</label>
+				<input type="text" id="lcd_message" name="lcd_message" size="6"><br><br>
+
+				<p id="pin_error"></p>
+				<button id="pin_btn2" class="button button5">Submit</button>
 			</center>
 		</div>
 		<div id="lstDiv"></div>
