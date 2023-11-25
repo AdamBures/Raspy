@@ -14,10 +14,7 @@ class User(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	
 	def get_user_projects(self):
-		projects = {}
-		for project in self.projects.all():
-			projects[project.name] = project.description
-		return projects
+		return self.projects.all()
 
 class Project(models.Model):
     name = models.CharField(max_length=255)

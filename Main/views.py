@@ -26,22 +26,30 @@ def my_view(request, **kwargs):
     else:
         return redirect('login')
 
+def download_file(request, username, filename):
+    file_path = os.path.join(settings.MEDIA_ROOT, f"files/{username}/{filename}")
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type="application/octet-stream")
+            response['Content-Disposition'] = 'attachment; filename=' + os.path.basename(file_path)
+            return response
+    return HttpResponse('File not found', status=404)
+
 def register(request):
-	if request.method == "POST":
-		username = request.POST.get('username')
-		password = request.POST.get('password')
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-		user = User.objects.create(username=username, password=password)
-		user.save()
-
-		return redirect('login')
-	else:
-		return render(request, "register.html")
+        user = User.objects.create(username=username, password=password)
+        user.save()
+        os.mkdir(f"files/{username}")
+        return redirect('login')
+    else:
+        return render(request, "register.html")
 
 def logout_view(request):
     logout(request)
     return redirect('login')
-
 
 @csrf_protect
 def login_view(request):
