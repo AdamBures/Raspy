@@ -31,17 +31,34 @@
 		      
 		    </ul>
 		</section>
-		<h3>User: {{username}}</h3>
-		<p>Projects:</p>
-		{% for file in projects %}
-		    <a href="/{{ file.file_path }}" download="{{ file.file }}" class="file-card">
-		        <strong>{{ file.name }}</strong><br>
-		        Description: {{ file.description }}<br>
-		        Created at: {{ file.created_at|date:"Y-m-d H:i:s" }}
-		    </a>
-		{% endfor %}
-		<br>
-		<a href="{% url 'logout' %}">Log out</a>
-
+		<center>
+			<div class="profile-content">
+				<h3>User: {{username}}</h3>
+				<p>Projects:</p>
+				{% for file in projects %}
+				    <a href="/create/{{ file.name }}" class="file-card">
+				    	<img class="file-image" src="{% static 'images/rpi logo.svg' %}">
+				    	<div class="file-text">
+					        <strong>{{ file.name }}</strong><br>
+					        Description: {{ file.description }}<br>
+					        Created at: {{ file.created_at|date:"Y-m-d H:i:s" }}
+				    	</div>
+				    </a>
+				{% endfor %}
+				<br>
+				<h3>Projects to try: </h3>
+				{% for file in predefined %}
+				    <a href="/create/{{ file.name }}" class="file-card">
+				    	<img class="file-image" src="{% static 'images/rpi logo.svg' %}">
+				    	<div class="file-text">
+					        <strong>{{ file.name }}</strong><br>
+					        Description: {{ file.description }}<br>
+				    	</div>
+				    </a>
+				{% endfor %}
+				<br>
+				<a class="logout" href="{% url 'logout' %}"><button id="btn" class="button button5">Log out</button></a>
+			</div>
+		</center>
 	</body>
 </html>

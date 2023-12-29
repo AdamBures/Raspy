@@ -21,11 +21,12 @@ window.onload = function () {
   button.addEventListener("mousedown", initialClick.bind(button), false);
   lcd.addEventListener("mousedown", initialClick.bind(lcd), false);
 
-  btn.addEventListener("mousedown", save_as_py, false);Z
+  btn.addEventListener("mousedown", save_as_py, false);
   btn_save_rpy.addEventListener("mousedown", save_as_rpy, false);
   open.addEventListener("mousedown", open_file, false);
 
   menu.addEventListener("mousedown", more_components, false);
+
 
   function more_components() {
     console.log("Components");
@@ -126,29 +127,19 @@ window.onload = function () {
   }
 
   function open_file() {
-    // Get a reference to the file input element
     var fileInput = document.getElementById("fileInput");
 
-    // Add an event listener to the file input element to handle when a file is selected
     fileInput.addEventListener('change', function () {
-      // Get the selected file
       var file = fileInput.files[0];
 
-      // Create a new FileReader object
       var reader = new FileReader();
 
-      // Add an event listener to the FileReader object to handle when the file is loaded
       reader.addEventListener('load', function () {
-        // Get the contents of the file as a string
         var fileContents = reader.result;
 
-        // Do something with the file contents
         var lines = fileContents.split('\n');
 
-        // Loop over the lines in the file
         for (var i = 0; i < lines.length; i++) {
-          // Do something with each line
-          console.log(lines[i]);
           var type = lines[i].split(' = ')[0];
           var details = lines[i].split(' = ')[1];
           var variables = details.slice(1, -1).split(', ');
@@ -184,11 +175,9 @@ window.onload = function () {
         }
       });
 
-      // Read the contents of the file as a string
       reader.readAsText(file);
     });
 
-    // Simulate a click on the file input element to open the file dialog
     fileInput.click();
   }
 
@@ -209,7 +198,6 @@ window.onload = function () {
     var lst = document.getElementById("lstDiv").children;
     var text = "";
     for (var i = 0; i < lst.length; i++) {
-      console.log(lst[i]);
       if (lst[i].id === "lcd") {
         text += `${lst[i].id} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.lcd_rs}, ${lst[i].dataset.lcd_en}, ${lst[i].dataset.lcd_d4}, ${lst[i].dataset.lcd_d5}, ${lst[i].dataset.lcd_d6}, ${lst[i].dataset.lcd_d7}, ${lst[i].dataset.lcd_columns}, ${lst[i].dataset.lcd_rows}, ${lst[i].dataset.lcd_backlight}, ${lst[i].dataset.message}, ${lst[i].src})`;
         text += "\n";

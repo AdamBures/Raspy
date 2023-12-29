@@ -304,8 +304,13 @@
   color: white;
 }
 
+.profile-content {
+    display: inline-block;
+    margin: 50px;
+}
+
 .file-card {
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     padding: 0px;
     margin: 10px;
     text-decoration: none;
@@ -317,6 +322,16 @@
 
 .file-card:hover {
     background-color: #f5f5f5;
+}
+
+.file-image {
+    width: 30px;
+    height: 40px; 
+    margin-left: -50px;
+}
+
+.logout { 
+  text-decoration: none !important;
 }
 
 /* Additional styles for responsiveness */

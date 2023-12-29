@@ -1,28 +1,43 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Component, User
+from .models import Component, User, Project, PredefinedProjects
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-
+import os
+from django.conf import settings
 # Create your views here.
 
 
 def index(request):
 	return render(request, "index.html")
 
-def create(request):
-	components = Component.objects.all().values()
-	context = {
-		"components": components,
-	}
-	return render(request, "create.html", context)
+def create(request, filename=None):
+    components = Component.objects.all().values()
+    context = {
+        "components": components,
+    }
+
+    if filename is None:
+        return render(request, "create.html", context)
+
+    else:
+        if Project.objects.filter(name=filename).exists():
+            project = Project.objects.get(name=filename).file
+        elif PredefinedProjects.objects.filter(name=filename).exists():
+            project = PredefinedProjects.objects.get(name=filename).file
+
+        file_content = project.read().decode("utf-8")
+
+        context["filename"] = file_content.strip("\n")
+        return render(request, "create.html", context)
+
 
 def my_view(request, **kwargs):
     username = kwargs.get('username')
-    print(request.session.get('LOGGED', True))
     if request.session.get('LOGGED', True):
-        return render(request, 'profile.html', {'username': username, 'projects': User.objects.get(username=username).get_user_projects()})
+        return render(request, 'profile.html', {'username': username, 'projects': User.objects.get(username=username).get_user_projects(), 'predefined': PredefinedProjects.objects.all()})
     else:
         return redirect('login')
 
@@ -42,7 +57,6 @@ def register(request):
 
         user = User.objects.create(username=username, password=password)
         user.save()
-        os.mkdir(f"files/{username}")
         return redirect('login')
     else:
         return render(request, "register.html")
@@ -56,6 +70,7 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+
         try:
             user = User.objects.get(username=username)
             found_user = User.objects.get(id=user.id)
@@ -76,7 +91,6 @@ def login_view(request):
             return redirect('login')
     else:
         username = request.session.get('username')
-        print(username)
         if username == None:
             request.session['LOGGED'] = False
             return render(request, 'login.html')

@@ -32,7 +32,7 @@
 			    <div class="row">
 			    		{% for component in components|slice:":3" %}
 							<div class="col">
-				            	<div id="{{ component.name }}Pic" > <img id="myImage-{{ component.name }}" src="{{ component.icon }}" alt="{{ component.name }}"></div>
+				            	<div id="{{ component.name }}Pic" > <img id="myImage-{{ component.name }}" src="{% static 'images/'|add:component.name|add:'.png' %}" alt="{{ component.name }}"></div>
 				        	</div>
 			    		{% endfor %}
 			    		<div class="col">
@@ -48,7 +48,7 @@
 								    	{% for component in components %}
 
 								            	<li id="{{ component.name }}Pic" > 
-								            			<img id="myImage-{{ component.name }}" src="{{ component.icon }}" alt="{{ component.name }}">
+								            			<img id="myImage-{{ component.name }}" src="{% static 'images/'|add:component.name|add:'.png' %}" alt="{{ component.name }}">
 								            	</li>
 							    		{% endfor %}
 								    </ul>
@@ -56,17 +56,18 @@
 								</nav>
 			    		</div>
 						<div class="col">
-							<button id="btn" class="button button5">Save PY</button>
+							<button id="btn" class="button button5">Ulož PY</button>
 				        </div>
 				        <div class="col">
-							<button id="btn_save_rpy" class="button button5">Save RPY</button>
+							<button id="btn_save_rpy" class="button button5">Ulož RPY</button>
 				        </div>
 				        <div class="col">
 				        	<input type="file" id="fileInput" accept=".rpy,application/x-rpy" style="display: none;">
-							<button id="btn_open" class="button button5">Open</button>
+							<button id="btn_open" class="button button5">Otevři</button>
 				        </div>
 				    </div>
 				</div>
+
 		</div>
 		<div id="pins" class="pins" style="display: none;">
 			<center>
@@ -113,5 +114,54 @@
 			</center>
 		</div>
 		<div id="lstDiv"></div>
+
+		{% if filename %}
+			<script>
+				function open_content(filename) {
+		            const lst = document.getElementById("lstDiv");
+		            var fileContents = filename;
+		            var lines = fileContents.split('\n');
+		            for (var i = 0; i < lines.length; i++) {
+
+		                var type = lines[i].split(' = ')[0];
+		                var details = lines[i].split(' = ')[1];
+		                var variables = details.slice(1, -1).split(', ');
+		                component = document.createElement("img");
+		                component.id = type.slice(0, 2);
+		                component.className = "component";
+		                if (type.includes("lcd")) {
+		                    component.src = variables[12];
+		                    component.dataset.lcd_rs = variables[2];
+		                    component.dataset.lcd_en = variables[3];
+		                    component.dataset.lcd_d4 = variables[4];
+		                    component.dataset.lcd_d5 = variables[5];
+		                    component.dataset.lcd_d6 = variables[6];
+		                    component.dataset.lcd_d7 = variables[7];
+		                    component.dataset.lcd_backlight = variables[8];
+		                    component.dataset.lcd_columns = variables[9];
+		                    component.dataset.lcd_rows = variables[10];
+		                    component.dataset.message = variables[11];
+		                }
+		                else {
+		                    component.src = variables[3];
+		                    component.dataset.pin = "pin";
+		                }
+		                component.style.position = "absolute";
+		                component.style.width = "50px";
+		                component.style.height = "50px";
+		                component.style.left = variables[0];
+		                component.style.top = variables[1];
+
+		                clearDiv(lst)
+		                lst.appendChild(component);
+		                }
+		            };
+
+		        function clearDiv(div) {
+					div.innerHTML = "";
+				}
+				open_content("{{ filename }}")
+			</script>
+		{% endif %}
 	</body>
 </html>
