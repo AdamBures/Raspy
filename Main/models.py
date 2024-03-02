@@ -18,16 +18,10 @@ class User(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User, related_name='projects', on_delete=models.CASCADE)
-    file = models.FileField(
-        upload_to='project_files/',
-        blank=True,
-        null=True,
-        validators=[FileExtensionValidator(allowed_extensions=["rpy"])]
-    )
+    file = models.TextField(default="file content")
 
 class PredefinedProjects(models.Model):
     name = models.CharField(max_length=255)

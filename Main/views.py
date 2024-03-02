@@ -1,14 +1,34 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Component, User, Project, PredefinedProjects
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-import os
 from django.conf import settings
-# Create your views here.
 
+from rest_framework import generics
+
+from .models import Component, User, Project, PredefinedProjects
+from .serializers import UserSerializer, ProjectSerializer
+
+import os
+import json
+# Create your views here.
+class UserListCreateView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class ProjectListCreateView(generics.ListCreateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+class UserDataView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class ProjectDataView(generics.RetrieveAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
 
 def index(request):
 	return render(request, "index.html")
@@ -25,14 +45,40 @@ def create(request, filename=None):
     else:
         if Project.objects.filter(name=filename).exists():
             project = Project.objects.get(name=filename).file
+
+            context["filename"] = project.strip("\n")
+            return render(request, "create.html", context)
+        
         elif PredefinedProjects.objects.filter(name=filename).exists():
             project = PredefinedProjects.objects.get(name=filename).file
 
-        file_content = project.read().decode("utf-8")
+            file_content = project.read().decode("utf-8")
 
-        context["filename"] = file_content.strip("\n")
-        return render(request, "create.html", context)
+            context["filename"] = file_content.strip("\n")
+            return render(request, "create.html", context)
 
+@csrf_protect
+def upload_file(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data in request body'}, status=400)
+
+        title = data.get('title')
+        file_content = data.get('content')
+        
+        print(title, file_content)
+
+        if not title or not file_content:
+            return JsonResponse({'error': 'Title or file content missing in request'}, status=400)
+
+        file_object = Project(name=title, file=file_content, owner=User.objects.get(username=request.session['username']))
+        file_object.save()
+        
+        return JsonResponse({'message': 'File uploaded successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
 
 def my_view(request, **kwargs):
     username = kwargs.get('username')

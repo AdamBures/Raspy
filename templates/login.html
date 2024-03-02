@@ -26,8 +26,8 @@
 		  </label>
 		    <ul class="menu">
 		      <a class="item" href="/">Home</a>
-		      <a class="item" href="/upload">Upload</a>
-		      <a class="item" href="/login">Account</a>
+		      <a class="item" href="/create">Tvoř</a>
+		      <a class="item" href="/login">Účet</a>
 		    </ul>
 		</section>
 		<form method="post" action="{% url 'login' %}">
@@ -35,17 +35,17 @@
 		    <div class="container">
 		        <div class="row">
 		            <div class="col-md-4 offset-md-4 login-form">
-		                <h2 class="form-heading">Login</h2>
+		                <h2 class="form-heading">Přihlášení</h2>
 		                <div class="form-group">
-		                    <label class="form-label" for="username">Username:</label>
+		                    <label class="form-label" for="username">Jméno:</label>
 		                    <input type="text" class="form-control" id="username" name="username" required>
 		                </div>
 		                <div class="form-group">
-		                    <label class="form-label" for="password">Password:</label>
+		                    <label class="form-label" for="password">Heslo:</label>
 		                    <input type="password" class="form-control" id="password" name="password" required>
 		                </div>
-		                <p>Don't have an account? <a href="register">Register here</a></p>
-		                <button type="submit" class="border border-dark btn btn-login btn-block">Login</button>
+		                <p>Nemáte účet? <a href="register">Zaregistrujte se zde</a></p>
+		                <button type="submit" class="border border-dark btn btn-login btn-block">Přihlášení</button>
 		            </div>
 		        </div>
 		    </div>

@@ -44,14 +44,14 @@ window.onload = function () {
   }
 
 
-  function show_menu() {
+  function show_menu(clickedElement) {
     const pins = document.getElementById("pins");
     const pins_lcd = document.getElementById("lcd_pins")
     
     var submit = document.getElementById('pin_btn');
     var submit2 = document.getElementById('pin_btn2');
     var error = document.getElementById("pin_error");
-    var element = this;
+    var element = clickedElement;
     error.innerHTML = "";
 
     if (element.id === "lcd") {
@@ -144,10 +144,10 @@ window.onload = function () {
           var details = lines[i].split(' = ')[1];
           var variables = details.slice(1, -1).split(', ');
 
+          console.log(variables)
 
           component = document.createElement("img");
-          component.src = variables[12];
-          component.id = type.slice(0, 2);
+          component.id = type.slice(0, 3);
           component.className = "component";
           if (type.includes("lcd")) {
             component.dataset.lcd_rs = variables[2];
@@ -160,8 +160,10 @@ window.onload = function () {
             component.dataset.lcd_columns = variables[9];
             component.dataset.lcd_rows = variables[10];
             component.dataset.message = variables[11];
+            component.source = variables[12];
           }
           else {
+            component.src = variables[3];
             component.dataset.pin = "pin";
           }
           component.style.position = "absolute";
@@ -170,6 +172,17 @@ window.onload = function () {
           component.style.left = variables[0];
           component.style.top = variables[1];
 
+          component.addEventListener("mousedown", function(event) {
+          var clickedElement = event.target;
+
+          if (event.button === 1) {
+            event.preventDefault();
+            clickedElement.remove();
+          } else {
+            show_menu(clickedElement);
+          }
+        }, false);
+          
           clearDiv(lst)
           lst.appendChild(component);
         }
@@ -207,12 +220,36 @@ window.onload = function () {
         text += "\n";
       }
     }
-    save_file("template.rpy", text);
+
+
+    var title = prompt("Vložte název souboru:", "Untitled");
+    if (title == null) {
+        title = "template.rpy";
+    }
+    else {
+      title += ".rpy";
+    }
+    save_file(title, text);
+
+    var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+
+    fetch('/upload', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken // Include the CSRF token in the request headers
+        },
+        body: JSON.stringify({ title: title, content: text })
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
   }
 
   function save_as_py() {
     var lst = document.getElementById("lstDiv").children;
-    var text = "from gpiozero import LED, Button\nfrom Adafruit_CharLCD import Adafruit_CharLCD\n\n";
+    var text = "from gpiozero import *\nfrom Adafruit_CharLCD import Adafruit_CharLCD\nfrom picamera import Picamera\n";
     var led_count = 1;
     var btn_count = 1;
     var lcd_count = 1;
@@ -222,6 +259,31 @@ window.onload = function () {
         text += "\n";
         led_count++;
       }
+
+      if (lst[i].id == "light") {
+        text += `light${led_count} = LightSensor(${lst[i].dataset.pin})`;
+        text += "\n";
+        led_count++;
+      }
+
+      if (lst[i].id == "motion") {
+        text += `motion${led_count} = MotionSensor(${lst[i].dataset.pin})`;
+        text += "\n";
+        led_count++;
+      }
+
+      if (lst[i].id == "motor") {
+        text += `motor${led_count} = Motor(${lst[i].dataset.pin})`;
+        text += "\n";
+        led_count++;
+      }
+
+      if (lst[i].id == "cam") {
+        text += `cam${led_count} = Picamera(${lst[i].dataset.pin})`;
+        text += "\n";
+        led_count++;
+      }
+
       if (lst[i].id == "btn") {
         text += `btn${btn_count} = Button(${lst[i].dataset.pin})`;
         text += "\n";
@@ -293,39 +355,19 @@ window.onload = function () {
       component.style.left = X + "px";
       component.style.top = Y + "px";
       lst.appendChild(component);
-      component.addEventListener("mousedown", show_menu, false);
+
+      component.addEventListener("mousedown", function(event) {
+        var clickedElement = event.target;
+
+        if (event.button === 1) {
+          event.preventDefault();
+          clickedElement.remove();
+        } else {
+          show_menu(clickedElement);
+        }
+      }, false);
+
       moving = false;
-
-      component.addEventListener("mouseover", () => {
-        const deleteButton = document.createElement("button");
-        deleteButton.id = "delete-button";
-        deleteButton.textContent = "X";
-        deleteButton.style.position = "absolute";
-        deleteButton.style.left = `${parseInt(component.style.left) + 50}px`;
-        deleteButton.style.top = `${parseInt(component.style.top) - 10}px`;
-        lst.appendChild(deleteButton);
-
-        deleteButton.addEventListener("mousedown", () => {
-          component.remove();
-          deleteButton.remove();
-        });
-
-      });
-
-      component.addEventListener("mouseout", () => {
-        console.log("We gone")
-        deleteButtonTimeoutId = setTimeout(() => {
-          const deleteButton = document.getElementById("delete-button");
-          if (deleteButton) {
-            deleteButton.remove();
-          }
-        }, 1000);
-      });
-
-      component.addEventListener("mouseenter", () => {
-        // clear the timeout if the mouse enters the img element again
-        clearTimeout(deleteButtonTimeoutId);
-      });
     }
 
     else {
