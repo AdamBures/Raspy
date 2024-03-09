@@ -46,8 +46,7 @@ def create(request, filename=None):
         if Project.objects.filter(name=filename).exists():
             project = Project.objects.get(name=filename).file
 
-            context["filename"] = project.strip("\n")
-            return render(request, "create.html", context)
+            context["filename"] = project
         
         elif PredefinedProjects.objects.filter(name=filename).exists():
             project = PredefinedProjects.objects.get(name=filename).file
@@ -55,7 +54,7 @@ def create(request, filename=None):
             file_content = project.read().decode("utf-8")
 
             context["filename"] = file_content.strip("\n")
-            return render(request, "create.html", context)
+        return render(request, "create.html", context)
 
 @csrf_protect
 def upload_file(request):
@@ -68,8 +67,6 @@ def upload_file(request):
         title = data.get('title')
         file_content = data.get('content')
         
-        print(title, file_content)
-
         if not title or not file_content:
             return JsonResponse({'error': 'Title or file content missing in request'}, status=400)
 

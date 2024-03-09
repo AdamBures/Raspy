@@ -11,6 +11,7 @@ window.onload = function () {
 
   const menu = document.getElementById("menu_check");
 
+  var menu_opened = false;
   var moving = false;
   var newImage;
 
@@ -31,7 +32,9 @@ window.onload = function () {
   function more_components() {
     console.log("Components");
     const components = document.getElementById("menu");
+
     if (components.style.display === "none") {
+      menu_opened = true;
       components.style.display = "block";
       const children = components.children;
       for (let i = 0; i < children.length; i++) {
@@ -39,6 +42,7 @@ window.onload = function () {
         child.addEventListener("mousedown", initialClick.bind(child), false);
       }
     } else {
+      menu_opened = false;
       components.style.display = "none";
     }
   }
@@ -55,7 +59,6 @@ window.onload = function () {
     error.innerHTML = "";
 
     if (element.id === "lcd") {
-      console.log(element.id)
       if (pins_lcd.style.display === "none") {
         pins_lcd.style.display = "block";
       } else {
@@ -89,6 +92,23 @@ window.onload = function () {
         component.dataset.lcd_columns = lcd_columns.value;
         component.dataset.lcd_rows = lcd_rows.value;
         component.dataset.message = lcd_message.value;
+
+        var isEmpty = (
+          component.dataset.lcd_rs === "" ||
+          component.dataset.lcd_en === "" ||
+          component.dataset.lcd_d4 === "" ||
+          component.dataset.lcd_d5 === "" ||
+          component.dataset.lcd_d6 === "" ||
+          component.dataset.lcd_d7 === "" ||
+          component.dataset.lcd_backlight === "" ||
+          component.dataset.lcd_columns === "" ||
+          component.dataset.lcd_rows === "" ||
+          component.dataset.message === ""
+      );
+
+      if (!isEmpty) {
+        component.title = "Nakonfigurováno";
+      }
       }
     }
     else {
@@ -100,17 +120,22 @@ window.onload = function () {
       }
 
       var input = document.getElementById("pin");
-      input.value = "";
+      input.value = element.dataset.pin == "pin" ? "" : element.dataset.pin;
       pins.style.left = X + 50 + "px";
       pins.style.top = Y + 50 + "px";
       pins.style.position = "absolute";
 
+
+      if (element.title === "Není nakonfigurováno") {
+        element.classList.add("empty");
+      }
+
       submit.onclick = function () {
         if (pins_lst.includes(input.value)) {
-          console.log("Is in list");
           element.dataset.pin = input.value;
-          error.innerHTML = ""
-          console.log("Clicked");
+          error.innerHTML = "";
+          element.title = "Nakonfigurováno";
+          element.classList.remove("empty");
         }
         else {
           error.innerHTML = "ERROR: Invalid PIN!";
@@ -119,7 +144,6 @@ window.onload = function () {
 
     };
 
-    console.log(X, Y, this.id, this.dataset.pin, element);
   }
 
   function clearDiv(div) {
@@ -222,7 +246,7 @@ window.onload = function () {
     }
 
 
-    var title = prompt("Vložte název souboru:", "Untitled");
+    var title = prompt("Vložte název souboru:", "Název");
     if (title == null) {
         title = "template.rpy";
     }
@@ -238,7 +262,7 @@ window.onload = function () {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken // Include the CSRF token in the request headers
+            'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({ title: title, content: text })
     })
@@ -298,7 +322,14 @@ window.onload = function () {
       }
     }
 
-    save_file("code.py", text);
+      var title = prompt("Vložte název souboru:", "Název");
+      if (title == null) {
+          title = "code.py";
+      }
+      else {
+        title += ".py";
+      }
+      save_file(title, text);
 
   };
 
@@ -328,11 +359,24 @@ window.onload = function () {
   }
 
   function create_img() {
+    var can_place = true;
     if (83 < X) {
-      document.removeEventListener("mousemove", move);
+      if (menu_opened){
+        if (X < 383){
+          newImage.remove();
+          can_place = false;
+          moving = false;
+        }
+        else{
+          can_place = true;
+        }
+      }
+      if (can_place) {
+        document.removeEventListener("mousemove", move);
       component = document.createElement("img");
       component.src = image.src;
       component.id = image.alt;
+      component.title = "Není nakonfigurováno";
       component.className = "component";
       if (image.alt === "lcd") {
         component.dataset.lcd_rs = "lcd_rs";
@@ -368,6 +412,8 @@ window.onload = function () {
       }, false);
 
       moving = false;
+      }
+      
     }
 
     else {
@@ -377,7 +423,6 @@ window.onload = function () {
   }
 
   function move(newImage, e) {
-    console.log("Moving");
     if (newImage) {
       var newX = e.clientX - 10;
       var newY = e.clientY - 10;
