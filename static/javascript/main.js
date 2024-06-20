@@ -127,7 +127,7 @@ window.onload = function () {
 
 
       if (element.title === "Není nakonfigurováno") {
-        element.classList.add("empty");
+        element.classList.add("circle");
       }
 
       submit.onclick = function () {
@@ -135,7 +135,7 @@ window.onload = function () {
           element.dataset.pin = input.value;
           error.innerHTML = "";
           element.title = "Nakonfigurováno";
-          element.classList.remove("empty");
+          element.classList.remove("circle");
         }
         else {
           error.innerHTML = "ERROR: Invalid PIN!";
@@ -188,7 +188,7 @@ window.onload = function () {
           }
           else {
             component.src = variables[3];
-            component.dataset.pin = "pin";
+            component.dataset.pin = variables[2];
           }
           component.style.position = "absolute";
           component.style.width = "50px";
@@ -207,7 +207,6 @@ window.onload = function () {
           }
         }, false);
           
-          clearDiv(lst)
           lst.appendChild(component);
         }
       });
@@ -234,14 +233,60 @@ window.onload = function () {
   function save_as_rpy() {
     var lst = document.getElementById("lstDiv").children;
     var text = "";
+    // for (var i = 0; i < lst.length; i++) {
+    //   if (lst[i].id === "lcd") {
+    //     text += `${lst[i].id} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.lcd_rs}, ${lst[i].dataset.lcd_en}, ${lst[i].dataset.lcd_d4}, ${lst[i].dataset.lcd_d5}, ${lst[i].dataset.lcd_d6}, ${lst[i].dataset.lcd_d7}, ${lst[i].dataset.lcd_columns}, ${lst[i].dataset.lcd_rows}, ${lst[i].dataset.lcd_backlight}, ${lst[i].dataset.message}, ${lst[i].src})`;
+    //     text += "\n";
+    //   }
+    //   else {
+    //     text += `${lst[i].id} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
+    //     text += "\n";
+    //   }
+    // }
+
+    var led_count = 1;
+    var btn_count = 1;
+    var lcd_count = 1;
     for (var i = 0; i < lst.length; i++) {
-      if (lst[i].id === "lcd") {
-        text += `${lst[i].id} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.lcd_rs}, ${lst[i].dataset.lcd_en}, ${lst[i].dataset.lcd_d4}, ${lst[i].dataset.lcd_d5}, ${lst[i].dataset.lcd_d6}, ${lst[i].dataset.lcd_d7}, ${lst[i].dataset.lcd_columns}, ${lst[i].dataset.lcd_rows}, ${lst[i].dataset.lcd_backlight}, ${lst[i].dataset.message}, ${lst[i].src})`;
+      if (lst[i].id == "led") {
+        text += `led${led_count} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
         text += "\n";
+        led_count++;
       }
-      else {
-        text += `${lst[i].id} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
+
+      if (lst[i].id == "light") {
+        text += `light${led_count} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
         text += "\n";
+        led_count++;
+      }
+
+      if (lst[i].id == "motion") {
+        text += `motion${led_count} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
+        text += "\n";
+        led_count++;
+      }
+
+      if (lst[i].id == "motor") {
+        text += `motor${led_count} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
+        text += "\n";
+        led_count++;
+      }
+
+      if (lst[i].id == "cam") {
+        text += `cam${led_count} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
+        text += "\n";
+        led_count++;
+      }
+
+      if (lst[i].id == "btn") {
+        text += `btn${btn_count} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.pin}, ${lst[i].src})`;
+        text += "\n";
+        btn_count++;
+      }
+      if (lst[i].id == "lcd") {
+        text += `lcd${lcd_count} = (${lst[i].style.left}, ${lst[i].style.top}, ${lst[i].dataset.lcd_rs}, ${lst[i].dataset.lcd_en}, ${lst[i].dataset.lcd_d4}, ${lst[i].dataset.lcd_d5}, ${lst[i].dataset.lcd_d6}, ${lst[i].dataset.lcd_d7}, ${lst[i].dataset.lcd_columns}, ${lst[i].dataset.lcd_rows}, ${lst[i].dataset.lcd_backlight}, ${lst[i].dataset.message}, ${lst[i].src})`;
+        text += "\n";
+        lcd_count++;
       }
     }
 

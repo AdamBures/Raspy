@@ -73,6 +73,7 @@ body {
   color: white;
   z-index: 1;
 }
+
 .pins > input {
   width: 50%;
 }
@@ -88,10 +89,20 @@ body {
 }
 
 .component {
-  display: block;
   width: 100%;
   height: auto;
 }
+
+.component.circle {
+  width: 5px; /* Adjust size of the circle */
+  height: 5px; /* Adjust size of the circle */
+  background-color: red;
+  border-radius: 50%; /* Makes the square a circle */
+  position: relative;
+  top: 10px; /* Adjust top position */
+  right: 10px; /* Adjust right position */
+}
+
 
 #menuToggle
 {
